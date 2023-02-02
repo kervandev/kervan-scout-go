@@ -41,7 +41,21 @@ func (c *Client) SendIssue(title string, message string, payload ...interface{})
 		return err
 	}
 
-	_, err = http.Post(c.config.Host, "application/json", bytes.NewBuffer(data))
+	client := http.Client{}
+	req, err := http.NewRequest("POST", c.config.Host, bytes.NewBuffer(data))
+	if err != nil {
+		return err
+	}
 
-	return err
+	req.Header = http.Header{
+		"Content-Type":  {"application/json"},
+		"project_token": {c.config.ProjectToken},
+	}
+
+	_, err = client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
