@@ -62,10 +62,12 @@ func (c *Client) request(title, message string, payload ...interface{}) error {
 	return nil
 }
 
-func (c *Client) PanicCatcher() {
-	if err := recover(); err != nil {
-		c.request("panic error", err.(string))
-	}
+func (c *Client) GetHost() string {
+	return c.config.Host
+}
+
+func (c *Client) GetProjectToken() string {
+	return c.config.ProjectToken
 }
 
 func (c *Client) SendIssue(title string, message string, payload ...interface{}) error {
