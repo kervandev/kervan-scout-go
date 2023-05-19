@@ -44,7 +44,7 @@ func (c *Client) request(title, message string, payload ...interface{}) error {
 	}
 
 	client := http.Client{}
-	req, err := http.NewRequest("POST", c.config.Host, bytes.NewBuffer(data))
+	req, err := http.NewRequest("POST", c.config.Host+"/api/v1/issues", bytes.NewBuffer(data))
 	if err != nil {
 		return err
 	}
