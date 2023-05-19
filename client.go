@@ -63,11 +63,9 @@ func (c *Client) request(title, message string, payload ...interface{}) error {
 }
 
 func (c *Client) PanicCatcher() {
-	defer func() {
-		if err := recover(); err != nil {
-			c.request("panic error", err.(string))
-		}
-	}()
+	if err := recover(); err != nil {
+		c.request("panic error", err.(string))
+	}
 }
 
 func (c *Client) SendIssue(title string, message string, payload ...interface{}) error {
