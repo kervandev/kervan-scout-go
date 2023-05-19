@@ -27,7 +27,7 @@ func New(cfg *Config) *Client {
 	}
 }
 
-func (c *Client) SendIssue(title string, message string, payload ...interface{}) error {
+func (c *Client) request(title, message string, payload ...interface{}) error {
 	b := body{
 		Title:   title,
 		Message: message,
@@ -56,6 +56,20 @@ func (c *Client) SendIssue(title string, message string, payload ...interface{})
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (c *Client) SendIssue(title string, message string, payload ...interface{}) error {
+	if err := c.request(title, message, payload...); err != nil {
+		return err
+	}
+
+	defer func() {
+		if err := recover(); err != nil {
+			c.request(title, err.(string))
+		}
+	}()
 
 	return nil
 }
