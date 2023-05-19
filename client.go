@@ -26,12 +26,6 @@ func New(cfg *Config) *Client {
 		config: cfg,
 	}
 
-	defer func() {
-		if err := recover(); err != nil {
-			client.request("panic error", err.(string))
-		}
-	}()
-
 	return client
 }
 
@@ -66,6 +60,14 @@ func (c *Client) request(title, message string, payload ...interface{}) error {
 	}
 
 	return nil
+}
+
+func (c *Client) PanicCatcher() {
+	defer func() {
+		if err := recover(); err != nil {
+			c.request("panic error", err.(string))
+		}
+	}()
 }
 
 func (c *Client) SendIssue(title string, message string, payload ...interface{}) error {
