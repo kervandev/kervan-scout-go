@@ -22,9 +22,17 @@ type body struct {
 }
 
 func New(cfg *Config) *Client {
-	return &Client{
+	client := &Client{
 		config: cfg,
 	}
+
+	defer func() {
+		if err := recover(); err != nil {
+			client.request("panic error", err.(string))
+		}
+	}()
+
+	return client
 }
 
 func (c *Client) request(title, message string, payload ...interface{}) error {
@@ -64,12 +72,6 @@ func (c *Client) SendIssue(title string, message string, payload ...interface{})
 	if err := c.request(title, message, payload...); err != nil {
 		return err
 	}
-
-	defer func() {
-		if err := recover(); err != nil {
-			c.request(title, err.(string))
-		}
-	}()
 
 	return nil
 }
