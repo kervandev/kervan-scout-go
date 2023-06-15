@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"os"
 )
 
 type Client struct {
@@ -49,6 +50,12 @@ func (c *Client) request(title, message string, payload ...interface{}) error {
 		return err
 	}
 
+	host, err := os.Hostname()
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Origin", host)
+
 	req.Header = http.Header{
 		"Content-Type":  {"application/json"},
 		"project_token": {c.config.ProjectToken},
@@ -70,10 +77,6 @@ func (c *Client) GetProjectToken() string {
 	return c.config.ProjectToken
 }
 
-func (c *Client) SendIssue(title string, message string, payload ...interface{}) error {
-	if err := c.request(title, message, payload...); err != nil {
-		return err
-	}
-
-	return nil
+func (c *Client) SendIssue(title string, message string, payload ...interface{}) {
+	c.request(title, message, payload...)
 }

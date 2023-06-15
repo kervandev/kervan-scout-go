@@ -1,10 +1,9 @@
 # kervan-scout-go
 
-
 ```go
 scaut_client := kervanscout.New(&kervanscout.Config{
   Host:         "...",
-  ProjectToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.....",
+  ProjectToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.....",
 })
 
 type Data struct {
@@ -17,5 +16,5 @@ data := Data{
   Json:  "{\"test\": \"test\"},{05327776655,5555 1111 1111 1233,foo@example.com}",
 }
 
-err := scaut_client.SendIssue("foo", "bar", data)
+soaut_client.SendIssue("foo", "bar", data)
 ```
