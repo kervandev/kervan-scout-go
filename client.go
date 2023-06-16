@@ -85,8 +85,16 @@ func (c *Client) SendIssue(title string, message string, payload ...interface{})
 	c.request(title, message, payload...)
 }
 
-func (c *Client) CatchPanicErrors() {
+func (c *Client) CatchPanicError(title ...string) {
+	var t string
+
+	if len(title) > 0 {
+		t = title[0]
+	} else {
+		t = "panic error"
+	}
+
 	if r := recover(); r != nil {
-		c.request("panic error", r.(string))
+		c.request(t, r.(string))
 	}
 }

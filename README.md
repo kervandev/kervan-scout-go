@@ -16,7 +16,7 @@ data := Data{
   Json:  "{\"test\": \"test\"},{05327776655,5555 1111 1111 1233,foo@example.com}",
 }
 
-defer client.CatchPanicErrors()
+defer client.CatchPanicError()
 
 client.SendIssue("foo", "bar", data)
 ```
