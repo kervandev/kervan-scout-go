@@ -1,7 +1,7 @@
 # kervan-scout-go
 
 ```go
-scaut_client := kervanscout.New(&kervanscout.Config{
+client := kervanscout.New(&kervanscout.Config{
   Host:         "...",
   ProjectToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.....",
 })
@@ -16,5 +16,7 @@ data := Data{
   Json:  "{\"test\": \"test\"},{05327776655,5555 1111 1111 1233,foo@example.com}",
 }
 
-soaut_client.SendIssue("foo", "bar", data)
+defer client.CatchPanicErrors()
+
+client.SendIssue("foo", "bar", data)
 ```
