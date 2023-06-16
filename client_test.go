@@ -1,6 +1,7 @@
 package kervanscout_test
 
 import (
+	"errors"
 	"testing"
 
 	kervanscout "github.com/kervandev/kervan-scout-go"
@@ -8,9 +9,15 @@ import (
 
 func TestSendIssue(t *testing.T) {
 	client := kervanscout.New(&kervanscout.Config{
-		Host:         "http://localhost:3002",
-		ProjectToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiYjE3MGNkMjctNGE0Zi00ZTgwLWFlZTQtYjZkZWI5ODNlMDZkIiwiY3JlYXRlZF9hdCI6InNlY29uZHM6MTY4NTI4Nzk4MyAgbmFub3M6NDU0MzYzODAiLCJpZCI6IjNlYWI0YjM3LTE0MjctNDk3Ni1iMWUyLTMxYjBhMmNmNzZmMyJ9.fzR49XZmqG4G_TzfwIHTFuEtDDXba_4ZTuk1__sNdtI",
+		ProjectToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkX2F0Ijoic2Vjb25kczoxNjg2Nzg5MjcyICBuYW5vczo0OTMyNjQxMDQiLCJpZCI6ImIxNTliNDg4LTgyMTYtNGQwMS05YWM2LTA5Mzg2M2I0YTdkMSJ9.6sNYAmoczxqHoWp_SVEJUdSr_w99SK-ndzfKQWvrUD0",
 	})
+	defer client.CatchPanicErrors()
 
-	client.SendIssue("erenkeeee", "KKEKKW")
+	var err error = errors.New("normal error")
+
+	if err != nil {
+		client.SendIssue("normal error", err.Error())
+	}
+
+	panic("panic error")
 }

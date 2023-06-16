@@ -27,6 +27,10 @@ func New(cfg *Config) *Client {
 		config: cfg,
 	}
 
+	if cfg.Host == "" {
+		client.config.Host = "https://scout-api.tapsilat.dev"
+	}
+
 	return client
 }
 
@@ -79,4 +83,10 @@ func (c *Client) GetProjectToken() string {
 
 func (c *Client) SendIssue(title string, message string, payload ...interface{}) {
 	c.request(title, message, payload...)
+}
+
+func (c *Client) CatchPanicErrors() {
+	if r := recover(); r != nil {
+		c.request("panic error", r.(string))
+	}
 }
