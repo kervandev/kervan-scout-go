@@ -1,3 +1,3 @@
-module github.com/kervandev/kervan-scout-go/v1
+module github.com/kervandev/kervan-scout-go
 
 go 1.20
