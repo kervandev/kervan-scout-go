@@ -8,7 +8,7 @@ import (
 )
 
 type Client struct {
-	config *Config
+	config Config
 }
 
 type Config struct {
@@ -22,7 +22,7 @@ type body struct {
 	Payload *interface{} `json:"payload,omitempty"`
 }
 
-func New(cfg *Config) *Client {
+func New(cfg Config) *Client {
 	client := &Client{
 		config: cfg,
 	}
