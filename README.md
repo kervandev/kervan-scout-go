@@ -1,7 +1,7 @@
 # kervan-scout-go
 
 ```go
-client := kervanscout.New(&kervanscout.Config{
+client := kervanscout.New(kervanscout.Config{
   Host:         "...",
   ProjectToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.....",
 })
