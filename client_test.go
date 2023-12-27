@@ -9,17 +9,17 @@ import (
 
 func TestSendIssue(t *testing.T) {
 	client := kervanscout.New(kervanscout.Config{
-		ProjectToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkX2F0Ijoic2Vjb25kczoxNjg2Nzg5MjcyICBuYW5vczo0OTMyNjQxMDQiLCJpZCI6ImIxNTliNDg4LTgyMTYtNGQwMS05YWM2LTA5Mzg2M2I0YTdkMSJ9.6sNYAmoczxqHoWp_SVEJUdSr_w99SK-ndzfKQWvrUD0",
+		ProjectToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkX2F0Ijoic2Vjb25kczoxNjg4MjU0NDkyIG5hbm9zOjc2Njk5NTg3NSIsImlkIjoiYjE1OWI0ODgtODIxNi00ZDAxLTlhYzYtMDkzODYzYjRhN2QxIn0.h11HK74p_GvZhJ0IxXy6qtStpYG7r88i6NU6msjNlic",
 	})
 	defer client.CatchPanicError("admin - panic error")
 
 	var err error = errors.New("normal error")
 
 	if err != nil {
-		client.SendIssue(&kervanscout.Issue{
-			Title:   "admin - normal error",
-			Message: err.Error(),
-		})
+		client.SendIssue(
+			"admin - normal error",
+			err.Error(),
+		)
 	}
 
 	panic("panic error")
