@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	kervanscout "github.com/kervandev/kervan-scout-go"
+	kervanscout "github.com/kervandev/kervan-scout-go/v2"
 )
 
 func TestSendIssue(t *testing.T) {
@@ -16,7 +16,10 @@ func TestSendIssue(t *testing.T) {
 	var err error = errors.New("normal error")
 
 	if err != nil {
-		client.SendIssue("normal error", err.Error())
+		client.SendIssue(&kervanscout.Issue{
+			Title:   "admin - normal error",
+			Message: err.Error(),
+		})
 	}
 
 	panic("panic error")

@@ -16,10 +16,12 @@ type Config struct {
 	ProjectToken string `json:"project_token"`
 }
 
-type body struct {
-	Title   string       `json:"title"`
-	Message string       `json:"message"`
-	Payload *interface{} `json:"payload,omitempty"`
+type Issue struct {
+	Title       string       `json:"title"`
+	Message     string       `json:"message"`
+	Payload     *interface{} `json:"payload,omitempty"`
+	Type        IssueType    `json:"type"`
+	MaskPayload *bool        `json:"mask_payload"`
 }
 
 func New(cfg Config) *Client {
@@ -34,16 +36,8 @@ func New(cfg Config) *Client {
 	return client
 }
 
-func (c *Client) request(title, message string, payload ...interface{}) error {
-	b := body{
-		Title:   title,
-		Message: message,
-	}
-	if len(payload) > 0 {
-		b.Payload = &payload[0]
-	}
-
-	data, err := json.Marshal(&b)
+func (c *Client) request(iss *Issue) error {
+	data, err := json.Marshal(&iss)
 	if err != nil {
 		return err
 	}
@@ -81,8 +75,15 @@ func (c *Client) GetProjectToken() string {
 	return c.config.ProjectToken
 }
 
-func (c *Client) SendIssue(title string, message string, payload ...interface{}) {
-	c.request(title, message, payload...)
+func (c *Client) SendIssue(iss *Issue) {
+	if iss == nil {
+		return
+	}
+
+	typ, _ := ParseIssueType(iss.Type.String())
+	iss.Type = typ
+
+	c.request(iss)
 }
 
 func (c *Client) CatchPanicError(title ...string) {
@@ -95,6 +96,10 @@ func (c *Client) CatchPanicError(title ...string) {
 	}
 
 	if r := recover(); r != nil {
-		c.request(t, r.(string))
+		c.request(&Issue{
+			Title:   t,
+			Message: r.(string),
+			Type:    IssueTypeExecution,
+		})
 	}
 }
