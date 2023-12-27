@@ -17,17 +17,17 @@ type Config struct {
 }
 
 type issue struct {
-	Title       string       `json:"title"`
-	Message     string       `json:"message"`
-	Payload     *interface{} `json:"payload,omitempty"`
-	Type        IssueType    `json:"type"`
-	MaskPayload *bool        `json:"mask_payload"`
+	Title       string      `json:"title"`
+	Message     string      `json:"message"`
+	Payload     interface{} `json:"payload,omitempty"`
+	Type        IssueType   `json:"type"`
+	MaskPayload bool        `json:"mask_payload"`
 }
 
 type Options struct {
-	Payload     *interface{} `json:"payload,omitempty"`
-	Type        IssueType    `json:"type"`
-	MaskPayload *bool        `json:"mask_payload"`
+	Payload     interface{} `json:"payload,omitempty"`
+	Type        IssueType   `json:"type"`
+	MaskPayload bool        `json:"mask_payload"`
 }
 
 func New(cfg Config) *Client {
