@@ -3,6 +3,7 @@ package kervanscout
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 	"os"
 )
@@ -30,6 +31,11 @@ type Options struct {
 	MaskPayload bool        `json:"mask_payload"`
 }
 
+type IssueResponseData struct {
+	ID      string `json:"id"`
+	Message string `json:"message"`
+}
+
 func New(cfg Config) *Client {
 	client := &Client{
 		config: cfg,
@@ -42,21 +48,31 @@ func New(cfg Config) *Client {
 	return client
 }
 
-func (c *Client) request(iss *issue) error {
+func (c *Client) request(iss *issue) (*IssueResponseData, error) {
+	if iss.Type == "" {
+		iss.Type = IssueTypeExecution
+	}
+
+	issueType, err := ParseIssueType(iss.Type.String())
+	if err != nil {
+		return nil, err
+	}
+	iss.Type = issueType
+
 	data, err := json.Marshal(&iss)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	client := http.Client{}
 	req, err := http.NewRequest("POST", c.config.Host+"/api/v1/issues", bytes.NewBuffer(data))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	host, err := os.Hostname()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	req.Header.Set("Origin", host)
 
@@ -65,12 +81,24 @@ func (c *Client) request(iss *issue) error {
 		"project_token": {c.config.ProjectToken},
 	}
 
-	_, err = client.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil
+	var respData *IssueResponseData
+	err = json.Unmarshal(respBody, &respData)
+	if err != nil {
+		return nil, err
+	}
+
+	return respData, nil
 }
 
 func (c *Client) GetHost() string {
@@ -81,7 +109,7 @@ func (c *Client) GetProjectToken() string {
 	return c.config.ProjectToken
 }
 
-func (c *Client) SendIssue(title, message string, additional ...Options) {
+func (c *Client) SendIssue(title, message string, additional ...Options) (*IssueResponseData, error) {
 	var opts Options
 	if len(additional) > 0 {
 		opts = additional[0]
@@ -95,7 +123,7 @@ func (c *Client) SendIssue(title, message string, additional ...Options) {
 		MaskPayload: opts.MaskPayload,
 	}
 
-	c.request(iss)
+	return c.request(iss)
 }
 
 func (c *Client) CatchPanicError(title ...string) {

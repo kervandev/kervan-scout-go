@@ -45,7 +45,9 @@ func ParseIssueType(s string) (IssueType, error) {
 		return IssueTypeQuestion, nil
 	case "help":
 		return IssueTypeHelp, nil
+	case "unknown":
+		return IssueTypeUnknown, nil
 	default:
-		return IssueTypeUnknown, fmt.Errorf("unknown issue type: %s", s)
+		return "", fmt.Errorf("unknown issue type: %s", s)
 	}
 }

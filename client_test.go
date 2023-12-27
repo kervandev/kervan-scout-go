@@ -16,10 +16,13 @@ func TestSendIssue(t *testing.T) {
 	var err error = errors.New("normal error")
 
 	if err != nil {
-		client.SendIssue(
+		data, err := client.SendIssue(
 			"admin - normal error",
 			err.Error(),
 		)
+
+		t.Log(data)
+		t.Log(err)
 	}
 
 	panic("panic error")
