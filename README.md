@@ -18,5 +18,7 @@ data := Data{
 
 defer client.CatchPanicError()
 
-client.SendIssue("foo", "bar", data)
+client.SendIssue("foo", "bar", kervanscout.Options{
+    Payload:data,
+})
 ```
